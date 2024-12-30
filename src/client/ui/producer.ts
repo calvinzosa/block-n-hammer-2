@@ -9,17 +9,20 @@ export enum Screen {
 
 export interface ProducerState {
 	isMenuToggled: boolean;
+	hasLoaded: boolean;
 	currentScreen: Screen;
 }
 
 const initialState: ProducerState = {
 	isMenuToggled: false,
+	hasLoaded: false,
 	currentScreen: Screen.StartScreen,
 };
 
 export const producer = createProducer(initialState, {
 	toggleMenu: (state, toggled?: boolean) => ({ ...state, isMenuToggled: toggled ?? !state.isMenuToggled }),
 	setScreen: (state, screen: ProducerState['currentScreen']) => ({ ...state, currentScreen: screen }),
+	finishLoading: (state) => ({ ...state, hasLoaded: true }),
 });
 
 producer.subscribe((state) => {

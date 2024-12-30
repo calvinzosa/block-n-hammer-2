@@ -12,7 +12,7 @@ import { CircleTransition } from '../components/CircleTransition';
 interface Props {
 	Camera: Camera;
 	Scale: number;
-	OnPlayButton: () => void;
+	OnPlayButton: () => boolean;
 }
 
 export function StartScreen(props: Props) {
@@ -62,6 +62,7 @@ export function StartScreen(props: Props) {
 			Position={UDim2.fromScale(0, 0)}
 			Size={UDim2.fromScale(1, 1)}
 			BackgroundTransparency={1}
+			ZIndex={1}
 		>
 			<imagelabel
 				ref={backgroundImageRef}
@@ -102,10 +103,13 @@ export function StartScreen(props: Props) {
 					Size={new UDim2(1, 0, 0, 140)}
 					InnerPadding={16}
 					OnActivated={(input) => {
+						const shouldTransition = OnPlayButton();
+						
+						if (!shouldTransition) {
+							return;
+						}
+						
 						doTransition(input.Position.X, input.Position.Y);
-						
-						OnPlayButton();
-						
 						clearTransition();
 					}}
 				/>

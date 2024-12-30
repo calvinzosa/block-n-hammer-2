@@ -28,6 +28,12 @@ const portal = createPortal(
 	playerGui,
 );
 
+if (RunService.IsStudio()) {
+	if (camera.ViewportSize === Vector2.one) {
+		camera.GetPropertyChangedSignal('ViewportSize').Wait();
+	}
+}
+
 root.render(
 	RunService.IsStudio()
 	? <StrictMode>

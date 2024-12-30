@@ -14,10 +14,8 @@ import Tween from '@rbxts/tween';
 import './GuiLoader';
 import { producer } from './ui/producer';
 
-// import { PerformanceGui, toggleMenu } from './archive/GuiHandler';
 import * as Camera from './Camera';
 import * as Cube from './Cube';
-// import * as Settings from './Settings';
 import Vars from './Variables';
 
 import { Infinity, isNaN } from 'shared/JS';

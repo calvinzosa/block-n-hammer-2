@@ -6,6 +6,9 @@ import { StartScreen } from './menus/StartScreen';
 
 import Events from 'shared/Events';
 import { calculateGuiScale } from 'shared/Utils';
+import { LoadingScreen } from './menus/LoadingScreen';
+import { AssetIds } from 'shared/Constants';
+import { setTimeout } from 'shared/JS';
 
 interface Props {
 	Camera: Camera;
@@ -20,10 +23,11 @@ export function MainGui(props: Props) {
 	
 	useEffect(() => {
 		changeScale(calculateGuiScale(Camera.ViewportSize));
-	}, [Camera.ViewportSize]);
-	print(scale, Camera.ViewportSize);
+	}, [Camera.ViewportSize.X, Camera.ViewportSize.Y]);
+	
 	const producer = useRootProducer();
 	const currentScreen = useRootSelector((state) => state.currentScreen);
+	let hasLoaded = useRootSelector((state) => state.hasLoaded);
 	
 	return (
 		<>
@@ -36,13 +40,31 @@ export function MainGui(props: Props) {
 				<uiscale
 					Scale={scale}
 				/>
+				{
+					!hasLoaded
+					? <LoadingScreen
+						OnFinished={() => {
+							producer.finishLoading();
+							hasLoaded = true;
+						}}
+					/>
+					: undefined
+				}
 				<StartScreen
 					Camera={Camera}
 					Scale={scale}
 					OnPlayButton={() => {
-						Events.StartScreenEnded.FireServer();
+						if (!hasLoaded) {
+							return false;
+						}
 						
-						producer.setScreen(Screen.Main);
+						setTimeout(() => {
+							Events.StartScreenEnded.FireServer();
+							
+							producer.setScreen(Screen.Main);
+						}, 750);
+						
+						return true;
 					}}
 				/>
 			</screengui>
