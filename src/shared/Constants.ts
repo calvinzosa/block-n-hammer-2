@@ -13,3 +13,7 @@ export namespace Attributes {
 export namespace Tags {
 	export const Cube = 'Cube';
 }
+
+export enum FontIds {
+	Inter = 12187365364,
+}

@@ -1,11 +1,11 @@
 local s = ''
 local function check(i,l)
 	if #s == 0 then
-		s = string.format('\nexport type %s = %s & {\n',i.Name,i.ClassName)
+		s = `\nexport type {i.Name} = {i.ClassName} & {\n`
 	end
-	local indent = string.rep('	',l)
+	local indent = string.rep('\t',l)
 	for _, child in i:GetChildren() do
-		local childType = string.format('%s%s: %s', indent, child.Name, child.ClassName)
+		local childType = `{indent}{child.Name}: {child.ClassName}`
 		if #child:GetChildren() > 0 then
 			s..=`{childType} & \{\n`
 			check(child,l+1)

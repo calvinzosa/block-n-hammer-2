@@ -7,19 +7,21 @@ import {
 	UserInputService,
 } from '@rbxts/services';
 
-import Tween from '@rbxts/tween';
+import { $warn } from 'rbxts-transform-debug';
 import * as Easing from '@rbxts/easing-functions';
+import Tween from '@rbxts/tween';
 
 import './GuiLoader';
-import './StartScreenHandler';
+import { producer } from './ui/producer';
 
-import { PerformanceGui, toggleMenu } from './GuiHandler';
-import * as Cube from './Cube';
+// import { PerformanceGui, toggleMenu } from './archive/GuiHandler';
 import * as Camera from './Camera';
+import * as Cube from './Cube';
+// import * as Settings from './Settings';
 import Vars from './Variables';
 
-import Events from 'shared/Events';
-import { console, Infinity, isNaN, toFixed } from 'shared/JS';
+import { Infinity, isNaN } from 'shared/JS';
+import { ClickInputs } from 'shared/Constants';
 
 const client = Players.LocalPlayer;
 const blurEffect = Lighting.WaitForChild('Blur') as BlurEffect;
@@ -38,7 +40,19 @@ UserInputService.InputBegan.Connect((input, gameProcessed) => {
 	}
 	
 	if (input.KeyCode === Enum.KeyCode.M) {
-		toggleMenu();
+		producer.toggleMenu();
+	}
+});
+
+UserInputService.InputEnded.Connect((input) => {
+	if (ClickInputs.has(input.UserInputType)) {
+		// Settings.mouseReleased();
+	}
+});
+
+UserInputService.InputChanged.Connect((input) => {
+	if (input.UserInputType === Enum.UserInputType.MouseMovement) {
+		// Settings.mouseMoved(input.Position.X);
 	}
 });
 
@@ -74,7 +88,7 @@ task.spawn(() => {
 			attempts++;
 			
 			if (attempts > 15) {
-				console.warn('An error occured while trying to bind to the ResetButtonCallback Core:', err);
+				$warn('An error occured while trying to bind to the ResetButtonCallback Core:', err);
 			}
 		}
 		
@@ -107,12 +121,10 @@ RunService.RenderStepped.Connect((dt) => {
 		averageDeltaTime = Infinity;
 	}
 	
-	PerformanceGui.Stats.FPS.Text = `${toFixed(1 / averageDeltaTime, 1)}fps`;
-	PerformanceGui.Stats.Ping.Text = `${toFixed(client.GetNetworkPing() / 1000, 1)}ms`;
+	// PerformanceGui.Stats.FPS.Text = `${toFixed(1 / averageDeltaTime, 1)}fps`;
+	// PerformanceGui.Stats.Ping.Text = `${toFixed(client.GetNetworkPing() / 1000, 1)}ms`;
 });
 
 RunService.Stepped.Connect((time, dt) => {
 	Cube.stepped(time, dt);
 });
-
-Events.EnterStartScreen.Fire();

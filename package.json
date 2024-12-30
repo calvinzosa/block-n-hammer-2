@@ -1,28 +1,34 @@
 {
-  "name": "block-and-hammer-2",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "build": "rbxtsc",
-    "watch": "rbxtsc -w"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@rbxts/compiler-types": "3.0.0-types.0",
-    "@rbxts/types": "^1.0.813",
-    "roblox-ts": "^3.0.0",
-    "typescript": "^5.7.2"
-  },
-  "dependencies": {
-    "@rbxts/cubic-bezier": "^1.1.0",
-    "@rbxts/easing-functions": "^1.1.0",
-    "@rbxts/lerp-functions": "^1.0.2",
-    "@rbxts/profileservice": "^1.4.2",
-    "@rbxts/services": "^1.5.5",
-    "@rbxts/string-utils": "^1.0.3",
-    "@rbxts/tween": "^1.0.5"
-  }
+	"name": "block-and-hammer-2",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"build": "rbxtsc",
+		"watch": "rbxtsc -w"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"@rbxts/compiler-types": "3.0.0-types.0",
+		"@rbxts/types": "^1.0.813",
+		"roblox-ts": "^3.0.0",
+		"typescript": "^5.7.2"
+	},
+	"dependencies": {
+		"@rbxts/cubic-bezier": "^1.1.0",
+		"@rbxts/easing-functions": "^1.1.0",
+		"@rbxts/lerp-functions": "^1.0.2",
+		"@rbxts/profileservice": "^1.4.2",
+		"@rbxts/react": "^17.2.3",
+		"@rbxts/react-reflex": "^0.3.4",
+		"@rbxts/react-roblox": "^17.2.3",
+		"@rbxts/services": "^1.5.5",
+		"@rbxts/string-utils": "^1.0.3",
+		"@rbxts/tween": "^1.0.5",
+		"@rbxts/ui-labs": "^2.3.1",
+		"rbxts-transform-debug": "github:roblox-aurora/rbxts-transform-debug",
+		"rbxts-transformer-setget": "^2.0.0"
+	}
 }

@@ -34,7 +34,7 @@ function CHAT_COLORS_BY_VERSION_FN() {
 		Color3.fromRGB(215, 197, 154), // Brick yellow
 	];
 	
-	function move(src: unknown[], a: number, b: number, t: number, dist: any[]) {
+	function move(src: Array<unknown>, a: number, b: number, t: number, dist: Array<any>) {
 		// dist[t], ... = src[a], ..., src[b]
 		for (let i = 0; i <= b - a; i++) {
 			let srcElement = src[i + a];

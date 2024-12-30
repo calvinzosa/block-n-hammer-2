@@ -2,6 +2,14 @@ import { RunService } from '@rbxts/services';
 
 export const rng = new Random(os.clock());
 
+export function randomFloat(min: number, max: number) {
+	return rng.NextNumber() * (max - min) + min;
+}
+
+export function randomInt(min: number, max: number) {
+	return rng.NextInteger(min, max);
+}
+
 export function to2D(object: Vector3) {
 	return new Vector2(object.X, object.Y);
 }
@@ -41,6 +49,16 @@ export function lerp(a: number, b: number, t: number, clampT: boolean = true) {
 	}
 	
 	return a + (b - a) * t;
+}
+
+export function roundToDecimal(x: number, decimalPlaces: number) {
+	const value = 10 ** decimalPlaces;
+	
+	return math.round(x * value) / value;
+}
+
+export function roundToNearestMultiple(x: number, multipleOf: number) {
+	return math.round(x / multipleOf) * multipleOf;
 }
 
 /**
@@ -90,15 +108,14 @@ export function clampAroundRadius3D(point: Vector3, target: Vector3, radius: num
  * @returns `UIScale` scale property
  */
 export function calculateGuiScale(resolution: Vector2) {
-	const minAxis = 480;
-	const maxAxis = 1920;
+	const minWidth = 1054;
+	const maxWidth = 1920;
+	const minScale = 0.6;
+	const maxScale = 1;
 	
-	const scaleMin = 0.25;
-	const scaleMax = 1;
+	const t = math.clamp((resolution.X - minWidth) / (maxWidth - minWidth), 0, 1);
 	
-	const scale = math.clamp(scaleMin + ((math.max(resolution.X, resolution.Y) - minAxis) / (maxAxis - minAxis)) * (scaleMax - scaleMin), scaleMin, scaleMax);
-	
-	return scale;
+	return t * (maxScale - minScale) + minScale;
 }
 
 /**
@@ -120,16 +137,24 @@ export function waitForPhysicsUpdate() {
 	RunService.Stepped.Wait();
 }
 
-// why does the `never` just not work??
-type EventsList<T> = {
-	[K in keyof T]?: T[K] extends RBXScriptSignal<infer C> ? (...args: Parameters<C>) => void : never;
-};
-
-/**
- * connects multiple event callbacks to multiple objects
- */
-export function onEvent<T extends Instance>(instance: T, events: EventsList<T>, method: keyof RBXScriptSignal = 'Connect') {
-	for (const [event, handler] of pairs(events)) {
-		(instance[event as keyof T] as RBXScriptSignal)[method](handler as Callback);
+export function getChildrenAdded(instance: Instance, callback: (child: Instance) => void) {
+	for (const child of instance.GetChildren()) {
+		callback(child);
 	}
+	
+	const connection = instance.ChildAdded.Connect(callback);
+	
+	return connection;
+}
+
+export function destroyAfter(instance: Instance | Array<Instance>, ms: number) {
+	task.delay(ms / 1_000, () => {
+		if (typeIs(instance, 'Instance')) {
+			instance.Destroy();
+		} else {
+			for (const inst of instance) {
+				inst.Destroy();
+			}
+		}
+	});
 }

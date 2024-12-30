@@ -1,55 +1,22 @@
-import {
-	Players,
-	RunService,
-} from '@rbxts/services';
-
-const client = Players.LocalPlayer;
-
-/** `π` ≈ `3.1415` */
+/** `π` */
 export const PI = math.pi;
-/** `τ` = `2π` */
-export const TAU = (2 * math.pi);
-/** `Φ` = `(1 + √5) / 2` */
-export const PHI = ((1 + math.sqrt(5)) / 2);
-/** `∞` */
+/** `2π` */
+export const TAU = 2 * math.pi;
+/** `(1 + √5) / 2` (Golden Ratio) */
+export const PHI = (1 + math.sqrt(5)) / 2;
 export const Infinity = math.huge;
-/** `NaN` */
 export const NaN = 0 / 0;
 
-export const console = {
-	log(...data: Array<unknown>) {
-		print(console.timestampNow(), ...data);
-	},
-	warn(...data: Array<unknown>) {
-		warn(console.timestampNow(), ...data);
-	},
-	debug(...data: Array<unknown>) {
-		if (!RunService.IsStudio()) {
-			return;
-		}
-		
-		warn(console.timestampNow(), ...data);
-	},
-	error(message: unknown) {
-		throw message;
-	},
-	assert(condition: boolean, message: unknown) {
-		if (!condition) {
-			throw message;
-		}
-	},
-	table(tableData: Record<any, any>) {
-		print(tableData);
-	},
-	timestampNow() {
-		const currentTime = DateTime.now();
-		
-		return `[${currentTime.FormatLocalTime('LTS', client !== undefined ? client.LocaleId : 'en-us')}]`;
-	},
-};
-
+/**
+ * if `to === -1`, then `to = arr.size()`
+ * @returns `Array` containing items `T` from index `from` until, but not including, index `to`
+ */
 export function slice<T extends defined>(arr: Array<T>, from: number, to: number) {
-	const output = [] as Array<T>;
+	if (to === -1) {
+		to = arr.size();
+	}
+	
+	const output: Array<T> = [];
 	
 	for (const i of $range(from, to - 1)) {
 		output.push(arr[i]);
@@ -59,15 +26,78 @@ export function slice<T extends defined>(arr: Array<T>, from: number, to: number
 }
 
 /**
- * @returns `true` if number is `nan`, otherwise `false`
+ * @returns `true` if `value` is `nan`, otherwise `false`
  */
-export function isNaN(number: number) {
-	return number !== number;
+export function isNaN(value: number | Vector3 | Vector2) {
+	if (typeIs(value, 'number')) {
+		return value !== value;
+	} else if (typeIs(value, 'Vector3')) {
+		return value.X !== value.X || value.Y !== value.Y || value.Z !== value.Z;
+	} else if (typeIs(value, 'Vector2')) {
+		return value.X !== value.X || value.Y !== value.Y;
+	}
+	
+	throw `unknown type: ${typeOf(value)}`;
 }
 
 /**
- * @returns short for `string.format('%.(D)f', N)`
+ * @returns `true` if number is `Infinity`, otherwise `false`
+ */
+export function isInfinity(number: number) {
+	return number === Infinity;
+}
+
+/**
+ * @returns `string.format('%.[D]f', [N])`
  */
 export function toFixed(number: number, decimals: number) {
-	return `%.${decimals}f`.format(number);
+	let formattedString = `%.${decimals}f`.format(number);
+	
+	if (formattedString === `-0.${'0'.rep(decimals)}`) {
+		formattedString = formattedString.sub(2);
+	}
+	
+	return formattedString;
+}
+
+export function setTimeout(callback: () => void, ms: number) {
+	let stopped = false;
+	
+	const thread = task.delay(ms / 1_000, () => {
+		if (!stopped) callback();
+	});
+	
+	return () => {
+		task.cancel(thread);
+		stopped = true;
+	}
+}
+
+export function setInterval(callback: (calls: number) => void, ms: number, callInitially: boolean = false) {
+	let thread: thread;
+	let stopped = false;
+	let calls = 0;
+	let checks = 0;
+	
+	const func = () => {
+		if (stopped) {
+			return;
+		}
+		
+		if (checks > 0 || callInitially) {
+			callback(calls);
+			
+			calls++;
+		}
+		
+		checks++;
+		thread = task.delay(ms / 1_000, func);
+	}
+	
+	func();
+	
+	return () => {
+		task.cancel(thread);
+		stopped = true;
+	}
 }

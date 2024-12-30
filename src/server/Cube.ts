@@ -8,35 +8,28 @@ import {
 import Events from 'shared/Events';
 
 import { Tags, Attributes } from 'shared/Constants';
-import { onEvent } from 'shared/Utils';
 import GetNameColor from 'shared/NameColor';
-import CubeModel from 'shared/Types/CubeModel';
+import { CubeModel } from 'shared/Types/CubeModel';
 
 const templateCube = ReplicatedStorage.FindFirstChild('Cube') as CubeModel;
 
-onEvent(Events.DoRespawn, {
-	OnServerEvent: (player) => {
-		const cube = Workspace.FindFirstChild(player.Name) as CubeModel | undefined;
-		if (cube?.IsA('Model') && cube.HasTag(Tags.Cube)) {
-			cube.Destroy();
-		}
-	},
+Events.DoRespawn.OnServerEvent.Connect((player) => {
+	const cube = Workspace.FindFirstChild(player.Name) as CubeModel | undefined;
+	if (cube?.IsA('Model') && cube.HasTag(Tags.Cube)) {
+		cube.Destroy();
+	}
 });
 
-onEvent(Events.StartScreenEntered, {
-	OnServerEvent: (player) => {
-		player.SetAttribute(Attributes.Player.IsInStartScreen, true);
-		
-		removeCube(player.Name);
-	},
+Events.StartScreenEntered.OnServerEvent.Connect((player) => {
+	player.SetAttribute(Attributes.Player.IsInStartScreen, true);
+	
+	removeCube(player.Name);
 });
 
-onEvent(Events.StartScreenEnded, {
-	OnServerEvent: (player) => {
-		player.SetAttribute(Attributes.Player.IsInStartScreen, false);
-		
-		createCube(player);
-	},
+Events.StartScreenEnded.OnServerEvent.Connect((player) => {
+	player.SetAttribute(Attributes.Player.IsInStartScreen, false);
+	
+	createCube(player);
 });
 
 export function createCube(player: Player) {

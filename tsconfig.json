@@ -14,14 +14,18 @@
 		"forceConsistentCasingInFileNames": true,
 		"moduleDetection": "force",
 		"strict": true,
+		"plugins": [
+			{"transform": "rbxts-transform-debug"},
+			{"transform": "rbxts-transformer-setget"},
+		],
 		"target": "ESNext",
 		"typeRoots": ["node_modules/@rbxts"],
-
+		
 		// configurable
 		"rootDir": "src",
 		"outDir": "out",
 		"baseUrl": "src",
 		"incremental": true,
-		"tsBuildInfoFile": "out/tsconfig.tsbuildinfo"
+		"tsBuildInfoFile": "out/tsconfig.tsbuildinfo",
 	}
 }

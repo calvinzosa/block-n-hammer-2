@@ -1,9 +1,16 @@
 import {
 	Players,
+	RunService,
 } from '@rbxts/services';
+
+import { $print, $warn } from 'rbxts-transform-debug';
 
 import ProfileService from '@rbxts/profileservice';
 import { Profile } from '@rbxts/profileservice/globals';
+
+import { roundToNearestMultiple, roundToDecimal } from 'shared/Utils';
+import ClientSettings from 'shared/ClientSettings';
+import Events from 'shared/Events';
 
 export const ProfileTemplate = {
 	Leaderstats: {
@@ -14,13 +21,55 @@ export const ProfileTemplate = {
 		CustomColor: -1,
 		LastSavedPosition: [16, 2, 0],
 	},
+	Settings: new Map<string, number | boolean>(),
 };
 
 export type UserProfile = Profile<typeof ProfileTemplate>;
-
 export const LoadedProfiles = new Map<Player, UserProfile>();
 
 const ProfileStore = ProfileService.GetProfileStore('PlayerData', ProfileTemplate);
+
+Events.UpdateSetting.OnServerInvoke = (player, settingId, newValue) => {
+	if (RunService.IsStudio()) {
+		$print(`Recieved setting update from ${player.Name} of ${settingId} to ${newValue}`);
+	}
+	
+	const profile = LoadedProfiles.get(player);
+	
+	if (!profile) {
+		$warn(`Unable to find profile for player ${player}!`);
+	}
+	
+	for (const setting of ClientSettings) {
+		if (setting.Id === settingId) {
+			if (!profile) {
+				return setting.Default;
+			}
+			
+			if (setting.Type === 'checkbox') {
+				if (typeIs(newValue, 'boolean')) {
+					profile.Data.Settings.set(setting.Id, newValue);
+					
+					return newValue;
+				}
+			} else if (setting.Type === 'slider') {
+				if (typeIs(newValue, 'number')) {
+					const sanitizedValue = roundToDecimal(math.clamp(roundToNearestMultiple(newValue, setting.Step), setting.Min, setting.Max), 3);
+					
+					profile.Data.Settings.set(setting.Id, sanitizedValue);
+					
+					return sanitizedValue;
+				}
+			} else if (setting.Type === 'dropdown') {
+				$warn('TODO: stanitize dropdown input');
+			}
+			
+			return setting.Default;
+		}
+	}
+	
+	return undefined;
+}
 
 function profileLoaded(player: Player, profile: UserProfile) {
 	const leaderstatsFolder = new Instance('Folder');
@@ -48,7 +97,6 @@ function profileLoaded(player: Player, profile: UserProfile) {
 
 export function playerAdded(player: Player) {
 	const userId = player.UserId;
-	
 	const profile = ProfileStore.LoadProfileAsync(`player_${userId}`);
 	
 	if (profile !== undefined) {

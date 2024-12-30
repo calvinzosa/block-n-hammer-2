@@ -2,10 +2,11 @@ import {
 	Workspace,
 } from '@rbxts/services';
 
-import { SpeedLinesGui } from './GuiHandler';
+// import { SpeedLinesGui } from './archive/GuiHandler';
 
 import { clampAroundRadius3D, rng } from 'shared/Utils';
 import Spring from 'shared/Spring';
+import 'easing-functions';
 
 export const camera = Workspace.CurrentCamera ?? Workspace.WaitForChild('Camera') as Camera;
 
@@ -27,9 +28,14 @@ export function setTarget(cf: CFrame) {
 	springCameraRotation.Target = new Vector3(...cf.ToOrientation());
 }
 
-export function setPosition(cf: CFrame) {
-	springCameraPosition.Position = cf.Position;
-	springCameraRotation.Position = new Vector3(...cf.ToOrientation());
+export function setPosition(cf: CFrame, reset: boolean = false) {
+	if (reset) {
+		springCameraPosition.Reset(cf.Position);
+		springCameraRotation.Reset(new Vector3(...cf.ToOrientation()));
+	} else {
+		springCameraPosition.Position = cf.Position;
+		springCameraRotation.Position = new Vector3(...cf.ToOrientation());
+	}
 }
 
 export function doImpulse(position: Vector3, rotation: Vector3 = Vector3.zero) {
@@ -57,11 +63,11 @@ export function renderStepped(dt: number) {
 		
 		speedIndex = (speedIndex + 15 * dt) % speedImages.size();
 		
-		SpeedLinesGui.Image.Size = UDim2.fromScale(speedSize, speedSize);
-		SpeedLinesGui.Image.Image = speedImages[math.floor(speedIndex)];
-		SpeedLinesGui.Image.Visible = true;
+		// SpeedLinesGui.Image.Size = UDim2.fromScale(speedSize, speedSize);
+		// SpeedLinesGui.Image.Image = speedImages[math.floor(speedIndex)];
+		// SpeedLinesGui.Image.Visible = true;
 	} else {
-		SpeedLinesGui.Image.Visible = false;
+		// SpeedLinesGui.Image.Visible = false;
 		camera.FieldOfView = 70;
 	}
 	
