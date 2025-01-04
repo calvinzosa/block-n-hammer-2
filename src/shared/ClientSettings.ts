@@ -28,9 +28,9 @@ export type ClientSetting = BaseClientSetting & (
 );
 
 export const SettingEvents = {
-	MouseReleased: [] as Array<() => void>,
-	MouseMoved: [] as Array<(x: number) => void>,
-	OnSettingChanged: [] as Array<(settingId: string, newValue: any) => void>,
+	MouseReleased: new Array<() => void>(),
+	MouseMoved: new Array<(x: number) => void>(),
+	OnSettingChanged: new Array<(settingId: string, newValue: any) => void>(),
 };
 
 const ClientSettings = [

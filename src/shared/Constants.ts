@@ -3,6 +3,7 @@ export const ClickInputs = new Set<CastsToEnum<Enum.UserInputType>>([Enum.UserIn
 export namespace Attributes {
 	export namespace Player {
 		export const IsInStartScreen = 'IsInStartScreen';
+		export const VoiceChatEnabled = 'VoiceChatEnabled';
 	}
 	
 	export namespace UI {
@@ -44,4 +45,6 @@ export const AssetIds = [
 	'rbxassetid://130568420000940', // upside-down half pill
 	'rbxassetid://72623577668462', // upside-down half stretched circle
 	'rbxassetid://124599294093527', // white square
+	'rbxassetid://86463845756534', // grass blade
+	'rbxassetid://83824641806203', // unknown texture
 ];

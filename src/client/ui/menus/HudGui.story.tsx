@@ -1,15 +1,14 @@
 import React from '@rbxts/react';
 import ReactRoblox from '@rbxts/react-roblox';
-import { $print } from 'rbxts-transform-debug';
-
 import { InferFusionProps, Slider } from '@rbxts/ui-labs';
 
-import { SideMenu } from './SideMenu';
 import { guiProducer } from '../producer';
 import { ReflexProvider } from '@rbxts/react-reflex';
+import { HudGui } from './HudGui';
 
 const controls = {
-	Open: true,
+	cubeSpeed: Slider(0, 0, 10, 0.5),
+	cubeAltitude: Slider(0, 0, 10, 0.5),
 };
 
 const story = {
@@ -17,11 +16,9 @@ const story = {
 	reactRoblox: ReactRoblox,
 	controls,
 	story: (props: InferFusionProps<typeof controls>) => {
-		const {
-			Open,
-		} = props.controls;
+		const { cubeAltitude, cubeSpeed } = props.controls;
 		
-		guiProducer.ToggleMenu(Open);
+		guiProducer.UpdateHUD(cubeAltitude, cubeSpeed);
 		
 		return (
 			<ReflexProvider producer={guiProducer}>
@@ -33,9 +30,7 @@ const story = {
 						Color={Color3.fromRGB(255, 255, 255)}
 						Thickness={16}
 					/>
-					<SideMenu
-						OnButtonClick={(button) => $print(`button clicked "${button}"`)}
-					/>
+					<HudGui />
 				</frame>
 			</ReflexProvider>
 		);

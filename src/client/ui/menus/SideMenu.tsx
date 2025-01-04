@@ -8,22 +8,16 @@ import { RoundedButton } from '../components/RoundedButton';
 import { useRootSelector } from '../producer';
 
 interface Props {
-	Open: boolean;
-	Scale: number;
 	OnButtonClick: (button: 'settings' | 'customization' | 'level selector' | 'spectate' | 'start menu') => void;
 }
 
 export function SideMenu(props: Props) {
 	let {
-		Open,
 		OnButtonClick,
 	} = props;
 	
-	const isMenuToggled = useRootSelector((state) => state.isMenuToggled);
-	
+	const isOpen = useRootSelector((state) => state.isMenuToggled);
 	const containerRef = useRef<Frame>();
-	
-	Open = isMenuToggled;
 	
 	let currentTween: PseudoTween | undefined = undefined;
 	
@@ -34,18 +28,18 @@ export function SideMenu(props: Props) {
 			currentTween?.Cancel();
 			
 			currentTween = Tween<UDim2>(
-				Open ? 1 : 0.5,
-				Open ? Easing.OutBounce : Easing.InSine,
+				isOpen ? 1 : 0.5,
+				isOpen ? Easing.OutBounce : Easing.InSine,
 				(value) => frame.Position = value,
 				frame.Position,
-				Open ? UDim2.fromScale(0, 1) : UDim2.fromScale(-0.6, 1),
+				isOpen ? UDim2.fromScale(0, 1) : UDim2.fromScale(-0.6, 1),
 			);
 			
 			return () => {
 				currentTween?.Cancel();
 			}
 		}
-	}, [Open]);
+	}, [isOpen]);
 	
 	return (
 		<frame

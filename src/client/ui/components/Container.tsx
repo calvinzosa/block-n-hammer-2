@@ -7,6 +7,7 @@ interface Props {
 	BackgroundColor3?: Color3;
 	HorizontalAlignment?: Enum.HorizontalAlignment;
 	VerticalAlignment?: Enum.VerticalAlignment;
+	FillDirection?: Enum.FillDirection;
 	Gap?: number;
 	Padding?: number;
 	PaddingTop?: number;
@@ -34,6 +35,7 @@ export function Container(props: Props) {
 		PaddingBottom,
 		PaddingLeft,
 		PaddingRight,
+		FillDirection,
 		Gap,
 		ZIndex,
 		AnchorPoint,
@@ -63,6 +65,7 @@ export function Container(props: Props) {
 				? <uilistlayout
 					HorizontalAlignment={HorizontalAlignment}
 					VerticalAlignment={VerticalAlignment}
+					FillDirection={FillDirection}
 					Padding={new UDim(0, Gap)}
 					SortOrder={Enum.SortOrder.Name}
 				/>

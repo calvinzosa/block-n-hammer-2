@@ -11,25 +11,30 @@ export interface ProducerState {
 	isMenuToggled: boolean;
 	hasLoaded: boolean;
 	currentScreen: Screen;
+	cubeAltitude: number;
+	cubeSpeed: number;
 }
 
 const initialState: ProducerState = {
 	isMenuToggled: false,
 	hasLoaded: false,
 	currentScreen: Screen.StartScreen,
+	cubeAltitude: 0,
+	cubeSpeed: 0,
 };
 
-export const producer = createProducer(initialState, {
-	toggleMenu: (state, toggled?: boolean) => ({ ...state, isMenuToggled: toggled ?? !state.isMenuToggled }),
-	setScreen: (state, screen: ProducerState['currentScreen']) => ({ ...state, currentScreen: screen }),
-	finishLoading: (state) => ({ ...state, hasLoaded: true }),
+export const guiProducer = createProducer(initialState, {
+	ToggleMenu: (state, toggled?: boolean) => ({ ...state, isMenuToggled: toggled ?? !state.isMenuToggled }),
+	SetScreen: (state, screen: ProducerState['currentScreen']) => ({ ...state, currentScreen: screen }),
+	FinishLoading: (state) => ({ ...state, hasLoaded: true }),
+	UpdateHUD: (state, cubeAltitude: number, cubeSpeed: number) => ({ ...state, cubeAltitude: cubeAltitude, cubeSpeed: cubeSpeed }),
 });
 
-producer.subscribe((state) => {
+guiProducer.subscribe((state) => {
 	Vars.IsMenuOpened = state.isMenuToggled;
 });
 
-export type RootProducer = typeof producer;
+export type RootProducer = typeof guiProducer;
 export type RootState = InferState<RootProducer>;
 
 export const useRootProducer: UseProducerHook<RootProducer> = useProducer;

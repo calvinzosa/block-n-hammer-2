@@ -7,7 +7,7 @@ import {
 import React, { StrictMode } from '@rbxts/react';
 import { createPortal, createRoot } from '@rbxts/react-roblox';
 
-import { producer, Screen } from './ui/producer';
+import { guiProducer, Screen } from './ui/producer';
 import { MainGui } from './ui/MainGui';
 
 import Events from 'shared/Events';
@@ -20,7 +20,7 @@ const playerGui = client.WaitForChild('PlayerGui') as PlayerGui;
 const root = createRoot(new Instance('Folder'));
 
 const portal = createPortal(
-	<ReflexProvider producer={producer}>
+	<ReflexProvider producer={guiProducer}>
 		<MainGui
 			Camera={camera}
 		/>
@@ -47,8 +47,8 @@ Events.EnterStartScreen.Event.Connect(() => {
 	
 	Events.StartScreenEntered.FireServer();
 	
-	producer.toggleMenu(false);
-	producer.setScreen(Screen.StartScreen);
+	guiProducer.ToggleMenu(false);
+	guiProducer.SetScreen(Screen.StartScreen);
 });
 
 Events.EnterStartScreen.Fire();

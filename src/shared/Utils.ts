@@ -1,4 +1,8 @@
-import { RunService } from '@rbxts/services';
+import {
+	RunService,
+} from '@rbxts/services';
+
+import { setTimeout } from './JS';
 
 export const rng = new Random(os.clock());
 
@@ -10,12 +14,31 @@ export function randomInt(min: number, max: number) {
 	return rng.NextInteger(min, max);
 }
 
+export function randomUnitVector() {
+	return rng.NextUnitVector();
+}
+
+export function randomVector(min: Vector3, max: Vector3, float: boolean = true) {
+	const func = float ? randomFloat : randomInt;
+	
+	if (!float) {
+		min = min.Floor();
+		max = max.Floor();
+	}
+	
+	return new Vector3(func(min.X, max.X), func(min.Y, max.Y), func(min.Z, max.Z));
+}
+
 export function to2D(object: Vector3) {
 	return new Vector2(object.X, object.Y);
 }
 
 export function to3D(object: Vector2, z = 0) {
 	return new Vector3(object.X, object.Y, z);
+}
+
+export function unpackVector3(object: Vector3) {
+	return [object.X, object.Y, object.Z] as [number, number, number];
 }
 
 export function toUDim2(point: Vector2, method = 'Offset' as 'Scale' | 'Offset') {
@@ -148,7 +171,7 @@ export function getChildrenAdded(instance: Instance, callback: (child: Instance)
 }
 
 export function destroyAfter(instance: Instance | Array<Instance>, ms: number) {
-	task.delay(ms / 1_000, () => {
+	setTimeout(() => {
 		if (typeIs(instance, 'Instance')) {
 			instance.Destroy();
 		} else {
@@ -156,5 +179,5 @@ export function destroyAfter(instance: Instance | Array<Instance>, ms: number) {
 				inst.Destroy();
 			}
 		}
-	});
+	}, ms);
 }

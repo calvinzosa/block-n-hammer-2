@@ -19,6 +19,7 @@ interface Props {
 	Direction?: 'left' | 'right';
 	InnerPadding?: number;
 	BackgroundTransparency?: number;
+	ZIndex?: number;
 	
 	OnActivated?: (inputObject: InputObject, clickCount: number) => void;
 	OnMouseUp?: (x: number, y: number) => void;
@@ -41,6 +42,7 @@ export function RoundedButton(props: Props) {
 		Size,
 		Order,
 		BackgroundTransparency,
+		ZIndex,
 		Animated,
 		OnActivated,
 		OnMouseDown,
@@ -78,12 +80,14 @@ export function RoundedButton(props: Props) {
 			Visible={Visible}
 			Size={Size}
 			LayoutOrder={Order}
+			ZIndex={ZIndex}
 		>
 			<textbutton
 				BackgroundTransparency={1}
 				Size={Size}
 				Position={UDim2.fromScale(isLeft ? 1 : 0, 0)}
 				AnchorPoint={new Vector2(isLeft ? 1 : 0, 0)}
+				ZIndex={ZIndex}
 				Text={''}
 				Event={{
 					MouseEnter: (button, x, y) => {
@@ -150,6 +154,7 @@ export function RoundedButton(props: Props) {
 					ScaleType={'Slice'}
 					SliceCenter={new Rect(512, 256, 512, 256)}
 					SliceScale={1}
+					ZIndex={ZIndex}
 				/>
 				<imagelabel
 					BackgroundTransparency={1}
@@ -159,6 +164,7 @@ export function RoundedButton(props: Props) {
 					AnchorPoint={new Vector2(isLeft ? 0 : 1, 0.5)}
 					Position={isLeft ? new UDim2(0, InnerPadding, 0.5, 0) : new UDim2(1, InnerPadding * -1, 0.5, 0)}
 					Size={UDim2.fromOffset(outerIconSize, outerIconSize)}
+					ZIndex={ZIndex}
 				>
 					<imagelabel
 						Image={IconImage}
@@ -167,6 +173,7 @@ export function RoundedButton(props: Props) {
 						Position={UDim2.fromScale(0.5, 0.5)}
 						Size={UDim2.fromScale(IconSize, IconSize)}
 						ScaleType={'Fit'}
+						ZIndex={ZIndex}
 					/>
 				</imagelabel>
 				<textlabel
@@ -180,6 +187,7 @@ export function RoundedButton(props: Props) {
 					Size={new UDim2(1, Size.Y.Offset * -1, 1, InnerPadding * -2)}
 					FontFace={font}
 					BackgroundTransparency={1}
+					ZIndex={ZIndex}
 				/>
 			</textbutton>
 		</frame>

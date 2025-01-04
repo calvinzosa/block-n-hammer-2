@@ -2,6 +2,7 @@ import {
 	CollectionService,
 	Players,
 	ReplicatedStorage,
+	VoiceChatService,
 	Workspace,
 } from '@rbxts/services';
 
@@ -10,6 +11,7 @@ import Events from 'shared/Events';
 import { Tags, Attributes } from 'shared/Constants';
 import GetNameColor from 'shared/NameColor';
 import { CubeModel } from 'shared/Types/CubeModel';
+import { setTimeout } from 'shared/JS';
 
 const templateCube = ReplicatedStorage.FindFirstChild('Cube') as CubeModel;
 
@@ -30,6 +32,15 @@ Events.StartScreenEnded.OnServerEvent.Connect((player) => {
 	player.SetAttribute(Attributes.Player.IsInStartScreen, false);
 	
 	createCube(player);
+});
+
+Events.EnableVoiceChat.OnServerEvent.Connect((player) => {
+	if (player.GetAttribute(Attributes.Player.VoiceChatEnabled)) {
+		player.Kick('Attempted to enable voice chat when its already enabled');
+		return;
+	}
+	
+	player.SetAttribute(Attributes.Player.VoiceChatEnabled, true);
 });
 
 export function createCube(player: Player) {
@@ -57,15 +68,14 @@ export function createCube(player: Player) {
 		}
 	});
 	
+	cube.Parent = Workspace;
 	player.Character = cube;
 	
-	cube.Parent = Workspace;
-	
-	task.delay(0.1, () => {
+	setTimeout(() => {
 		cube.Cube.SetNetworkOwner(player);
 		cube.Hammer.Head.SetNetworkOwner(player);
 		cube.Hammer.Handle.SetNetworkOwner(player);
-	});
+	}, 100);
 	
 	Events.CubeSpawned.FireAllClients(cube, player);
 	Events.OnRespawned.FireClient(player, cube, false);

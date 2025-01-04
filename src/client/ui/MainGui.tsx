@@ -7,8 +7,9 @@ import { StartScreen } from './menus/StartScreen';
 import Events from 'shared/Events';
 import { calculateGuiScale } from 'shared/Utils';
 import { LoadingScreen } from './menus/LoadingScreen';
-import { AssetIds } from 'shared/Constants';
 import { setTimeout } from 'shared/JS';
+import { $print } from 'rbxts-transform-debug';
+import { HudGui } from './menus/HudGui';
 
 interface Props {
 	Camera: Camera;
@@ -44,8 +45,10 @@ export function MainGui(props: Props) {
 					!hasLoaded
 					? <LoadingScreen
 						OnFinished={() => {
-							producer.finishLoading();
+							$print('Finished loading');
+							
 							hasLoaded = true;
+							producer.FinishLoading();
 						}}
 					/>
 					: undefined
@@ -61,7 +64,7 @@ export function MainGui(props: Props) {
 						setTimeout(() => {
 							Events.StartScreenEnded.FireServer();
 							
-							producer.setScreen(Screen.Main);
+							producer.SetScreen(Screen.Main);
 						}, 750);
 						
 						return true;
@@ -77,9 +80,8 @@ export function MainGui(props: Props) {
 				<uiscale
 					Scale={scale}
 				/>
+				<HudGui />
 				<SideMenu
-					Open={false}
-					Scale={scale}
 					OnButtonClick={(button) => {
 						switch (button) {
 							case 'settings': {

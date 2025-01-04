@@ -5,21 +5,23 @@ import {
 	RunService,
 	StarterGui,
 	UserInputService,
+	VoiceChatService,
 } from '@rbxts/services';
 
-import { $warn } from 'rbxts-transform-debug';
+import { $print, $warn } from 'rbxts-transform-debug';
 import * as Easing from '@rbxts/easing-functions';
 import Tween from '@rbxts/tween';
 
 import './GuiLoader';
-import { producer } from './ui/producer';
+import { guiProducer } from './ui/producer';
 
-import * as Camera from './Camera';
+import CameraController from './Camera';
 import * as Cube from './Cube';
 import Vars from './Variables';
 
-import { Infinity, isNaN } from 'shared/JS';
+import { Infinity, isNaN, setTimeout } from 'shared/JS';
 import { ClickInputs } from 'shared/Constants';
+import Events from 'shared/Events';
 
 const client = Players.LocalPlayer;
 const blurEffect = Lighting.WaitForChild('Blur') as BlurEffect;
@@ -32,13 +34,24 @@ const tweens = {
 const maxFrames = 80;
 const frameTimes = new Array<number>(maxFrames);
 
+setTimeout(() => {
+	try {
+		if (VoiceChatService.IsVoiceEnabledForUserIdAsync(client.UserId)) {
+			$print('Enabling voice chat');
+			Events.EnableVoiceChat.FireServer();
+		}
+	} catch (err) {
+		$warn(`Failed to check for voice chat, error: ${err}`);
+	}
+}, 1_000);
+
 UserInputService.InputBegan.Connect((input, gameProcessed) => {
 	if (gameProcessed) {
 		return;
 	}
 	
 	if (input.KeyCode === Enum.KeyCode.M) {
-		producer.toggleMenu();
+		guiProducer.ToggleMenu();
 	}
 });
 
@@ -95,7 +108,7 @@ task.spawn(() => {
 });
 
 RunService.BindToRenderStep('Camera', Enum.RenderPriority.Camera.Value + 1, (dt) => {
-	Camera.renderStepped(dt);
+	CameraController.RenderStepped(dt);
 });
 
 RunService.RenderStepped.Connect((dt) => {

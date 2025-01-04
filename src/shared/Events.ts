@@ -21,4 +21,6 @@ export default {
 	
 	GetSavedSettings: eventsFolder[getMethod]('GetSavedSettings') as RemoteFunction<() => Record<string, any>>,
 	UpdateSetting: eventsFolder[getMethod]('UpdateSetting') as RemoteFunction<(settingId: string, newValue: any) => any>,
+	
+	EnableVoiceChat: eventsFolder[getMethod]('EnableVoiceChat') as RemoteEvent<() => void>,
 };

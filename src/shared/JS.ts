@@ -16,7 +16,7 @@ export function slice<T extends defined>(arr: Array<T>, from: number, to: number
 		to = arr.size();
 	}
 	
-	const output: Array<T> = [];
+	const output = new Array<T>();
 	
 	for (const i of $range(from, to - 1)) {
 		output.push(arr[i]);

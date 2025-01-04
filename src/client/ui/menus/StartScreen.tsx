@@ -102,7 +102,12 @@ export function StartScreen(props: Props) {
 					IconSize={0.5}
 					Size={new UDim2(1, 0, 0, 140)}
 					InnerPadding={16}
+					ZIndex={3}
 					OnActivated={(input) => {
+						if (isTransitioning) {
+							return;
+						}
+						
 						const shouldTransition = OnPlayButton();
 						
 						if (!shouldTransition) {
@@ -120,6 +125,7 @@ export function StartScreen(props: Props) {
 					IconSize={0.5}
 					Size={new UDim2(1, 0, 0, 140)}
 					InnerPadding={16}
+					ZIndex={3}
 				/>
 			</Container>
 			{
