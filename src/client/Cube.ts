@@ -5,17 +5,15 @@ import {
 	Workspace,
 } from '@rbxts/services';
 
-import CameraController from './Camera';
-// import { HudGui } from './archive/GuiHandler';
+import { guiProducer } from './ui/producer';
 import * as Effects from './Effects';
+import CameraController from './Camera';
 import Vars from './Variables';
 
 import { directionTo, studsToMeters, to2D, to3D, clampAroundRadius2D } from 'shared/Utils';
 import { Infinity, PI, setTimeout, toFixed } from 'shared/JS';
-import Events from 'shared/Events';
 import { CubeModel, CubeHammer, CubePart } from 'shared/Types/CubeModel';
-import { $print } from 'rbxts-transform-debug';
-import { guiProducer } from './ui/producer';
+import Events from 'shared/Events';
 
 const client = Players.LocalPlayer;
 
@@ -188,7 +186,7 @@ Events.CubeDestroying.OnClientEvent.Connect((otherCube) => {
 export function instantRespawn() {
 	if (cube) {
 		cube.Pivot = templateCube.GetPivot();
-		cube.hammer.Head.CFrame = cube.Pivot;
+		cube.hammer.Head.CFrame = new CFrame(cube.Position.add(new Vector3(0, 5, 0)));
 		
 		cube.SetVelocity();
 		
@@ -246,7 +244,7 @@ export function stepped(_time: number, _dt: number) {
 	debugFolder.ClearAllChildren();
 	
 	if (cube) {
-		if (cube.Y < -500 && !voidRespawnDebounce) {
+		if (cube.Y < -256 && !voidRespawnDebounce) {
 			instantRespawn();
 			
 			voidRespawnDebounce = true;

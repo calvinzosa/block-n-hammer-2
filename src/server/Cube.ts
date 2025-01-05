@@ -15,12 +15,15 @@ import { setTimeout } from 'shared/JS';
 
 const templateCube = ReplicatedStorage.FindFirstChild('Cube') as CubeModel;
 
-Events.DoRespawn.OnServerEvent.Connect((player) => {
+const respawnPlayer = (player: Player) => {
 	const cube = Workspace.FindFirstChild(player.Name) as CubeModel | undefined;
 	if (cube?.IsA('Model') && cube.HasTag(Tags.Cube)) {
 		cube.Destroy();
 	}
-});
+}
+
+Events.DoRespawn.OnServerEvent.Connect(respawnPlayer);
+Events.ForceRespawn.Event.Connect(respawnPlayer);
 
 Events.StartScreenEntered.OnServerEvent.Connect((player) => {
 	player.SetAttribute(Attributes.Player.IsInStartScreen, true);
@@ -57,11 +60,7 @@ export function createCube(player: Player) {
 	cube.Name = player.Name;
 	
 	cube.Destroying.Connect(() => {
-		if (player.GetAttribute(Attributes.Player.IsInStartScreen)) {
-			return;
-		}
-		
-		task.wait(Players.RespawnTime);
+		task.wait(1);
 		
 		if (player.IsDescendantOf(Players)) {
 			createCube(player);

@@ -19,6 +19,22 @@ export enum FontIds {
 	Inter = 12187365364,
 }
 
+export interface SoundData {
+	Id: string;
+	PitchMin: number;
+	PitchMax: number;
+	Volume: number;
+}
+
+export const SoundsData = {
+	GrassHit_Light: { Id: 'rbxassetid://98069158661569', PitchMin: 0.85, PitchMax: 1.2, Volume: 0.5 },
+	GrassHit_Strong: { Id: 'rbxassetid://9114109952', PitchMin: 0.9, PitchMax: 1.2, Volume: 1 },
+	PlasticHit_Light: { Id: 'rbxassetid://9117455448', PitchMin: 0.9, PitchMax: 1.1, Volume: 1.3 },
+	PlasticHit_Strong: { Id: 'rbxassetid://9117520197', PitchMin: 0.6, PitchMax: 0.7, Volume: 1 },
+	MetalHit_Light: { Id: 'rbxassetid://9116684733', PitchMin: 0.95, PitchMax: 1.2, Volume: 0.5 },
+	MetalHit_Strong: { Id: 'rbxassetid://9116673678', PitchMin: 0.8, PitchMax: 1.1, Volume: 0.6 },
+} satisfies Record<string, SoundData>;
+
 export const AssetIds = [
 	'rbxassetid://80028419934896', // block
 	'rbxassetid://117201772657781', // block hammer 2 logo
@@ -47,4 +63,10 @@ export const AssetIds = [
 	'rbxassetid://124599294093527', // white square
 	'rbxassetid://86463845756534', // grass blade
 	'rbxassetid://83824641806203', // unknown texture
+	SoundsData.GrassHit_Light.Id,
+	SoundsData.GrassHit_Strong.Id,
+	SoundsData.PlasticHit_Light.Id,
+	SoundsData.PlasticHit_Strong.Id,
+	SoundsData.MetalHit_Light.Id,
+	SoundsData.MetalHit_Strong.Id,
 ];

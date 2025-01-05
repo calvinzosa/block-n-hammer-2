@@ -13,6 +13,7 @@ import * as Easing from '@rbxts/easing-functions';
 import Tween from '@rbxts/tween';
 
 import './GuiLoader';
+import './Commands';
 import { guiProducer } from './ui/producer';
 
 import CameraController from './Camera';
@@ -132,8 +133,7 @@ RunService.RenderStepped.Connect((dt) => {
 		averageDeltaTime = Infinity;
 	}
 	
-	// PerformanceGui.Stats.FPS.Text = `${toFixed(1 / averageDeltaTime, 1)}fps`;
-	// PerformanceGui.Stats.Ping.Text = `${toFixed(client.GetNetworkPing() / 1000, 1)}ms`;
+	guiProducer.UpdatePerformance(1 / averageDeltaTime, client.GetNetworkPing());
 });
 
 RunService.Stepped.Connect((time, dt) => {

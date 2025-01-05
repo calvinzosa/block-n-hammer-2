@@ -11,23 +11,36 @@ export interface ProducerState {
 	isMenuToggled: boolean;
 	hasLoaded: boolean;
 	currentScreen: Screen;
-	cubeAltitude: number;
-	cubeSpeed: number;
+	cube: {
+		altitude: number;
+		speed: number;
+	};
+	performance: {
+		fps: number;
+		ping: number;
+	};
 }
 
 const initialState: ProducerState = {
 	isMenuToggled: false,
 	hasLoaded: false,
 	currentScreen: Screen.StartScreen,
-	cubeAltitude: 0,
-	cubeSpeed: 0,
+	cube: {
+		altitude: 0,
+		speed: 0,
+	},
+	performance: {
+		fps: 0,
+		ping: 0,
+	},
 };
 
 export const guiProducer = createProducer(initialState, {
 	ToggleMenu: (state, toggled?: boolean) => ({ ...state, isMenuToggled: toggled ?? !state.isMenuToggled }),
 	SetScreen: (state, screen: ProducerState['currentScreen']) => ({ ...state, currentScreen: screen }),
 	FinishLoading: (state) => ({ ...state, hasLoaded: true }),
-	UpdateHUD: (state, cubeAltitude: number, cubeSpeed: number) => ({ ...state, cubeAltitude: cubeAltitude, cubeSpeed: cubeSpeed }),
+	UpdateHUD: (state, altitude: number, speed: number) => ({ ...state, cube: { altitude, speed } }),
+	UpdatePerformance: (state, fps: number, ping: number) => ({ ...state, performance: { fps, ping } }),
 });
 
 guiProducer.subscribe((state) => {

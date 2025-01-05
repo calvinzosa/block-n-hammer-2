@@ -14,6 +14,7 @@ export default {
 	
 	DoRespawn: eventsFolder[getMethod]('DoRespawn') as RemoteEvent<() => void>,
 	OnRespawned: eventsFolder[getMethod]('OnRespawned') as RemoteEvent<(cube: CubeModel, isInstant: boolean) => void>,
+	ForceRespawn: eventsFolder[getMethod]('ForceRespawn') as BindableEvent<(player: Player) => void>,
 	
 	EnterStartScreen: eventsFolder[getMethod]('EnterStartScreen') as BindableEvent<() => void>,
 	StartScreenEntered: eventsFolder[getMethod]('StartScreenEntered') as RemoteEvent<() => void>,

@@ -5,6 +5,8 @@ import {
 import * as PlayerData from './PlayerData';
 import * as Cube from './Cube';
 
+import './Commands';
+
 Players.PlayerAdded.Connect((player) => {
 	PlayerData.playerAdded(player);
 	Cube.playerAdded(player);

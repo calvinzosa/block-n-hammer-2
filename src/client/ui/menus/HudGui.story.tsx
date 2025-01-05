@@ -9,6 +9,8 @@ import { HudGui } from './HudGui';
 const controls = {
 	cubeSpeed: Slider(0, 0, 10, 0.5),
 	cubeAltitude: Slider(0, 0, 10, 0.5),
+	performanceFPS: Slider(60, 0, 240, 0.5),
+	performancePing: Slider(0, 0, 1_000, 10),
 };
 
 const story = {
@@ -16,9 +18,10 @@ const story = {
 	reactRoblox: ReactRoblox,
 	controls,
 	story: (props: InferFusionProps<typeof controls>) => {
-		const { cubeAltitude, cubeSpeed } = props.controls;
+		const { cubeAltitude, cubeSpeed, performanceFPS, performancePing } = props.controls;
 		
 		guiProducer.UpdateHUD(cubeAltitude, cubeSpeed);
+		guiProducer.UpdatePerformance(performanceFPS, performancePing);
 		
 		return (
 			<ReflexProvider producer={guiProducer}>

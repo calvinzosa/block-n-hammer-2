@@ -5,7 +5,8 @@ import {
 } from '@rbxts/services';
 
 import { destroyAfter, randomFloat, randomInt, randomUnitVector, randomVector } from 'shared/Utils';
-import { setTimeout } from 'shared/JS';
+import { PI, setTimeout } from 'shared/JS';
+import { SoundData, SoundsData } from 'shared/Constants';
 
 const templateEffectsFolder = ReplicatedStorage.WaitForChild('Templates').WaitForChild('Effects') as Folder;
 const effectsFolder = Workspace.WaitForChild('Effects');
@@ -24,37 +25,88 @@ export function hammerHitMaterial(part: BasePart, impactPoint: Vector3, normal: 
 	hammerEffectDebounce = true;
 	setTimeout(() => hammerEffectDebounce = false, 100);
 	
-	if (strength > 100) {
+	if (strength > 1200) {
 		return;
 	}
 	
 	let effect: EffectPart | undefined = undefined;
+	let soundData: SoundData | undefined = undefined;
 	let effectAmount = 0;
 	let createParticles = false;
 	
 	switch (part.Material) {
-		case Enum.Material.Grass: {
-			if (strength > 10) {
+		case Enum.Material.Grass:
+			if (strength > 30) {
 				effect = templateEffectsFolder.WaitForChild('GrassHit_0').Clone() as EffectPart;
+				effect.ParticleEmitter.Color = new ColorSequence(part.Color);
 				effectAmount = randomInt(100, 200);
 				
-				if (strength > 30) createParticles = true;
+				soundData = SoundsData.GrassHit_Light;
+				
+				if (strength > 120) {
+					soundData = SoundsData.GrassHit_Strong;
+					createParticles = true;
+				}
 			}
 			
 			break;
+		case Enum.Material.Plastic:
+			if (strength > 50) {
+				effect = templateEffectsFolder.WaitForChild('PlasticHit_0').Clone() as EffectPart;
+				effect.ParticleEmitter.Color = new ColorSequence(part.Color);
+				effectAmount = randomInt(20, 50);
+				
+				soundData = SoundsData.PlasticHit_Light;
+				
+				if (strength > 180) {
+					soundData = SoundsData.PlasticHit_Strong;
+					createParticles = true;
+				}
+			}
+			
+			break;
+		case Enum.Material.Metal:
+		case Enum.Material.DiamondPlate:
+			if (strength > 110) {
+				soundData = SoundsData.MetalHit_Light;
+				
+				if (strength > 200) {
+					soundData = SoundsData.MetalHit_Strong;
+				}
+			}
+			
+			break;
+		default:
+			effect = templateEffectsFolder.WaitForChild('Unknown_0').Clone() as EffectPart;
+			effectAmount = 20;
+	}
+	
+	if (effect) {
+		destroyAfter(effect, effect.ParticleEmitter.Lifetime.Max * 1_000);
+		
+		effect.CFrame = CFrame.lookAlong(impactPoint, normal);
+		effect.Parent = effectsFolder;
+		effect.ParticleEmitter.Emit(effectAmount);
+	}
+	
+	if (soundData !== undefined) {
+		const sound = new Instance('Sound');
+		sound.Volume = soundData.Volume;
+		sound.SoundId = soundData.Id;
+		sound.PlayOnRemove = true;
+		
+		const pitchEffect = new Instance('PitchShiftSoundEffect');
+		pitchEffect.Octave = randomFloat(soundData.PitchMin, soundData.PitchMax);
+		pitchEffect.Parent = sound;
+		
+		sound.Parent = effectsFolder;
+		
+		if (!sound.IsLoaded) {
+			sound.Loaded.Wait();
 		}
+		
+		sound.Destroy();
 	}
-	
-	if (effect === undefined) {
-		effect = templateEffectsFolder.WaitForChild('Unknown_0').Clone() as EffectPart;
-		effectAmount = 20;
-	}
-	
-	destroyAfter(effect, 2_000);
-	
-	effect.CFrame = CFrame.lookAlong(impactPoint, normal);
-	effect.Parent = effectsFolder;
-	effect.ParticleEmitter.Emit(effectAmount);
 	
 	if (createParticles) {
 		let totalParticles = randomInt(10, 20);
