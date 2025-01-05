@@ -76,6 +76,21 @@ export function hammerHitMaterial(part: BasePart, impactPoint: Vector3, normal: 
 			}
 			
 			break;
+		case Enum.Material.Brick:
+			if (strength > 110) {
+				effect = templateEffectsFolder.WaitForChild('BrickHit_0').Clone() as EffectPart;
+				effect.ParticleEmitter.Color = new ColorSequence(part.Color);
+				effectAmount = randomInt(2, 7);
+				
+				soundData = SoundsData.BrickHit_Light;
+				
+				if (strength > 190) {
+					soundData = SoundsData.BrickHit_Strong;
+					createParticles = true;
+				}
+			}
+			
+			break;
 		default:
 			effect = templateEffectsFolder.WaitForChild('Unknown_0').Clone() as EffectPart;
 			effectAmount = 20;
@@ -91,9 +106,11 @@ export function hammerHitMaterial(part: BasePart, impactPoint: Vector3, normal: 
 	
 	if (soundData !== undefined) {
 		const sound = new Instance('Sound');
+		
+		destroyAfter(sound, 5_000);
+		
 		sound.Volume = soundData.Volume;
 		sound.SoundId = soundData.Id;
-		sound.PlayOnRemove = true;
 		
 		const pitchEffect = new Instance('PitchShiftSoundEffect');
 		pitchEffect.Octave = randomFloat(soundData.PitchMin, soundData.PitchMax);
@@ -105,7 +122,11 @@ export function hammerHitMaterial(part: BasePart, impactPoint: Vector3, normal: 
 			sound.Loaded.Wait();
 		}
 		
-		sound.Destroy();
+		sound.Play();
+		
+		if (soundData.TimePosition) {
+			sound.TimePosition = soundData.TimePosition;
+		}
 	}
 	
 	if (createParticles) {

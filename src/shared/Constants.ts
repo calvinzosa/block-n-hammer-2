@@ -24,15 +24,18 @@ export interface SoundData {
 	PitchMin: number;
 	PitchMax: number;
 	Volume: number;
+	TimePosition?: number;
 }
 
 export const SoundsData = {
 	GrassHit_Light: { Id: 'rbxassetid://98069158661569', PitchMin: 0.85, PitchMax: 1.2, Volume: 0.5 },
 	GrassHit_Strong: { Id: 'rbxassetid://9114109952', PitchMin: 0.9, PitchMax: 1.2, Volume: 1 },
 	PlasticHit_Light: { Id: 'rbxassetid://9117455448', PitchMin: 0.9, PitchMax: 1.1, Volume: 1.3 },
-	PlasticHit_Strong: { Id: 'rbxassetid://9117520197', PitchMin: 0.6, PitchMax: 0.7, Volume: 1 },
+	PlasticHit_Strong: { Id: 'rbxassetid://9117520197', PitchMin: 0.5, PitchMax: 0.6, Volume: 1 },
 	MetalHit_Light: { Id: 'rbxassetid://9116684733', PitchMin: 0.95, PitchMax: 1.2, Volume: 0.5 },
 	MetalHit_Strong: { Id: 'rbxassetid://9116673678', PitchMin: 0.8, PitchMax: 1.1, Volume: 0.6 },
+	BrickHit_Light: { Id: 'rbxassetid://9118622414', PitchMin: 0.95, PitchMax: 1.2, Volume: 0.5 },
+	BrickHit_Strong: { Id: 'rbxassetid://3417831369', PitchMin: 0.9, PitchMax: 1.1, Volume: 0.7, TimePosition: 0.1 },
 } satisfies Record<string, SoundData>;
 
 export const AssetIds = [
