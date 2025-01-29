@@ -24,6 +24,8 @@ import { Infinity, isNaN, setTimeout } from 'shared/JS';
 import { ClickInputs } from 'shared/Constants';
 import Events from 'shared/Events';
 
+import './WaterWaves';
+
 const client = Players.LocalPlayer;
 const blurEffect = Lighting.WaitForChild('Blur') as BlurEffect;
 

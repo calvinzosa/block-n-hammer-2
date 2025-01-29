@@ -84,6 +84,10 @@ export function roundToNearestMultiple(x: number, multipleOf: number) {
 	return math.round(x / multipleOf) * multipleOf;
 }
 
+export function fixFloatingPoint(x: number, decimals: number = 5) {
+	return tonumber(string.format(`%.${decimals}f`, x))!;
+}
+
 /**
  * @returns clamped `point` inside circle at `target` with `radius`
  */

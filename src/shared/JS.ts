@@ -74,6 +74,8 @@ export function setTimeout(callback: () => void, ms: number) {
 }
 
 export function setInterval(callback: (calls: number) => void, ms: number, callInitially: boolean = false) {
+	const seconds = ms / 1_000;
+	
 	let thread: thread;
 	let stopped = false;
 	let calls = 0;
@@ -91,7 +93,7 @@ export function setInterval(callback: (calls: number) => void, ms: number, callI
 		}
 		
 		checks++;
-		thread = task.delay(ms / 1_000, func);
+		thread = task.delay(seconds, func);
 	}
 	
 	func();
